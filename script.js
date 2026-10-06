@@ -106,3 +106,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// ===== LIGHTBOX GALLERY =====
+const portfolioImages = [];
+let currentLightboxIndex = 0;
+
+// Collect all portfolio images
+document.querySelectorAll('.portfolio-item img').forEach((img, i) => {
+    portfolioImages.push({
+        src: img.src,
+        alt: img.alt
+    });
+    // Make the parent clickable
+    img.parentElement.style.cursor = 'pointer';
+    img.parentElement.addEventListener('click', function(e) {
+        e.preventDefault();
+        openLightbox(i);
+    });
+});
+
+function openLightbox(index) {
+    currentLightboxIndex = index;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    
+    lightboxImg.src = portfolioImages[index].src;
+    lightboxImg.alt = portfolioImages[index].alt;
+    caption.textContent = portfolioImages[index].alt;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(event) {
+    if (event && event.target.tagName === 'IMG') return;
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function changeLightbox(direction) {
+    currentLightboxIndex += direction;
+    if (currentLightboxIndex >= portfolioImages.length) currentLightboxIndex = 0;
+    if (currentLightboxIndex < 0) currentLightboxIndex = portfolioImages.length - 1;
+    
+    const lightboxImg = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    
+    lightboxImg.src = portfolioImages[currentLightboxIndex].src;
+    lightboxImg.alt = portfolioImages[currentLightboxIndex].alt;
+    caption.textContent = portfolioImages[currentLightboxIndex].alt;
+}
+
+// Keyboard navigation for lightbox
+document.addEventListener('keydown', function(e) {
+    const lightbox = document.getElementById('lightbox');
+    if (!lightbox.classList.contains('open')) return;
+    
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') changeLightbox(-1);
+    if (e.key === 'ArrowRight') changeLightbox(1);
+});

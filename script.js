@@ -83,7 +83,7 @@ const fadeObserver = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Add fade-in class to elements
-document.querySelectorAll('.section-grid, .service-card, .testimonial, .faq-item, .portfolio-item, .contact-info, .contact-form').forEach(el => {
+document.querySelectorAll('.section-grid, .service-card, .testimonial, .faq-item, .event-project-card, .contact-info, .contact-form').forEach(el => {
     el.classList.add('fade-in');
     fadeObserver.observe(el);
 });
@@ -107,52 +107,78 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== LIGHTBOX GALLERY =====
-// Full gallery: 9 existing wix-portfolio photos + 11 new gallery photos = 20 total
-const fullGalleryImages = [
-    { src: 'images/wix-portfolio-1.jpg', alt: 'Wedding ceremony floral design' },
-    { src: 'images/wix-portfolio-2.jpg', alt: 'Elegant reception decor' },
-    { src: 'images/wix-portfolio-3.jpg', alt: 'Floral installation' },
-    { src: 'images/wix-portfolio-4.jpg', alt: 'Tablescape design' },
-    { src: 'images/wix-portfolio-5.jpg', alt: 'Mandap decor' },
-    { src: 'images/wix-portfolio-6.jpg', alt: 'Sangeet stage design' },
-    { src: 'images/wix-portfolio-7.jpg', alt: 'Event styling' },
-    { src: 'images/wix-portfolio-8.jpg', alt: 'Centerpiece design' },
-    { src: 'images/wix-portfolio-9.jpg', alt: 'Venue transformation' },
-    { src: 'images/gallery-1.jpg', alt: 'Gallery — event design 1' },
-    { src: 'images/gallery-2.jpg', alt: 'Gallery — event design 2' },
-    { src: 'images/gallery-3.jpg', alt: 'Gallery — event design 3' },
-    { src: 'images/gallery-4.jpg', alt: 'Gallery — event design 4' },
-    { src: 'images/gallery-5.jpg', alt: 'Gallery — event design 5' },
-    { src: 'images/gallery-6.jpg', alt: 'Gallery — event design 6' },
-    { src: 'images/gallery-7.jpg', alt: 'Gallery — event design 7' },
-    { src: 'images/gallery-8.jpg', alt: 'Gallery — event design 8' },
-    { src: 'images/gallery-9.jpg', alt: 'Gallery — event design 9' },
-    { src: 'images/gallery-10.jpg', alt: 'Gallery — event design 10' },
-    { src: 'images/gallery-11.jpg', alt: 'Gallery — event design 11' },
-];
+// ===== PER-EVENT GALLERY DATA =====
+const eventGalleries = {
+    mandy: {
+        title: "Mandy & AK's",
+        images: [
+            { src: 'images/mandy-1.jpg',  alt: "Mandy & AK's — ceremony" },
+            { src: 'images/mandy-2.jpg',  alt: "Mandy & AK's — florals" },
+            { src: 'images/mandy-3.jpg',  alt: "Mandy & AK's — reception" },
+            { src: 'images/mandy-4.jpg',  alt: "Mandy & AK's — decor" },
+            { src: 'images/mandy-5.jpg',  alt: "Mandy & AK's — celebration" },
+            { src: 'images/mandy-6.jpg',  alt: "Mandy & AK's — details" },
+            { src: 'images/mandy-7.jpg',  alt: "Mandy & AK's — venue" },
+            { src: 'images/mandy-8.jpg',  alt: "Mandy & AK's — baraat" },
+            { src: 'images/mandy-9.jpg',  alt: "Mandy & AK's — stage" },
+            { src: 'images/mandy-10.jpg', alt: "Mandy & AK's — dance floor" },
+        ]
+    },
+    hyatt: {
+        title: "Hyatt Regency Grand Cypress",
+        images: [
+            { src: 'images/hyatt-1.jpg', alt: 'Hyatt Regency Grand Cypress — event design' },
+            { src: 'images/hyatt-2.jpg', alt: 'Hyatt Regency Grand Cypress — florals' },
+            { src: 'images/hyatt-3.jpg', alt: 'Hyatt Regency Grand Cypress — tablescape' },
+            { src: 'images/hyatt-4.jpg', alt: 'Hyatt Regency Grand Cypress — ceremony' },
+            { src: 'images/hyatt-5.jpg', alt: 'Hyatt Regency Grand Cypress — reception' },
+            { src: 'images/hyatt-6.jpg', alt: 'Hyatt Regency Grand Cypress — decor' },
+        ]
+    },
+    hardrock: {
+        title: "Hard Rock Daytona Beach",
+        images: [
+            { src: 'images/hardrock-1.jpg', alt: 'Hard Rock Daytona Beach — event' },
+            { src: 'images/hardrock-2.jpg', alt: 'Hard Rock Daytona Beach — florals' },
+            { src: 'images/hardrock-3.jpg', alt: 'Hard Rock Daytona Beach — decor' },
+            { src: 'images/hardrock-4.jpg', alt: 'Hard Rock Daytona Beach — stage' },
+            { src: 'images/hardrock-5.jpg', alt: 'Hard Rock Daytona Beach — reception' },
+            { src: 'images/hardrock-6.jpg', alt: 'Hard Rock Daytona Beach — details' },
+            { src: 'images/hardrock-7.jpg', alt: 'Hard Rock Daytona Beach — ceremony' },
+            { src: 'images/hardrock-8.jpg', alt: 'Hard Rock Daytona Beach — celebration' },
+        ]
+    }
+};
 
-let currentLightboxIndex = 0;
-
-// ===== GALLERY OVERLAY (drill-down full portfolio) =====
+// ===== GALLERY OVERLAY (per-event drill-down) =====
 const galleryOverlay = document.getElementById('galleryOverlay');
 const galleryOverlayGrid = document.getElementById('galleryOverlayGrid');
+const galleryOverlayTitle = document.getElementById('galleryOverlayTitle');
 const galleryCloseBtn = document.getElementById('galleryCloseBtn');
-const viewFullGalleryBtn = document.getElementById('viewFullGalleryBtn');
 
-// Build the overlay grid once
-if (galleryOverlayGrid) {
-    fullGalleryImages.forEach((img, i) => {
+// Currently active event's images (for lightbox navigation within event only)
+let currentEventImages = [];
+
+// Open gallery overlay for a specific event
+function openEventGallery(eventKey) {
+    const eventData = eventGalleries[eventKey];
+    if (!eventData || !galleryOverlay || !galleryOverlayGrid) return;
+
+    currentEventImages = eventData.images;
+
+    // Set the title
+    galleryOverlayTitle.textContent = eventData.title;
+
+    // Clear and rebuild the grid
+    galleryOverlayGrid.innerHTML = '';
+    eventData.images.forEach((img, i) => {
         const item = document.createElement('div');
         item.className = 'gallery-overlay-item';
         item.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy"><div class="gallery-overlay-zoom">&#43;</div>`;
         item.addEventListener('click', () => openLightbox(i));
         galleryOverlayGrid.appendChild(item);
     });
-}
 
-function openGalleryOverlay() {
-    if (!galleryOverlay) return;
     galleryOverlay.classList.add('open');
     galleryOverlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -166,17 +192,17 @@ function closeGalleryOverlay() {
     document.body.style.overflow = '';
 }
 
-if (viewFullGalleryBtn) viewFullGalleryBtn.addEventListener('click', openGalleryOverlay);
-if (galleryCloseBtn) galleryCloseBtn.addEventListener('click', closeGalleryOverlay);
-
-// Portfolio items open the overlay (drill-down) instead of single-image lightbox
-document.querySelectorAll('[data-gallery-open]').forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', (e) => {
+// Bind event project cards
+document.querySelectorAll('.event-project-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', (e) => {
         e.preventDefault();
-        openGalleryOverlay();
+        const eventKey = card.getAttribute('data-event');
+        openEventGallery(eventKey);
     });
 });
+
+if (galleryCloseBtn) galleryCloseBtn.addEventListener('click', closeGalleryOverlay);
 
 // ESC closes the overlay (only when lightbox is not open)
 document.addEventListener('keydown', function(e) {
@@ -186,15 +212,18 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// ===== LIGHTBOX (navigates within current event only) =====
+let currentLightboxIndex = 0;
+
 function openLightbox(index) {
     currentLightboxIndex = index;
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const caption = document.getElementById('lightbox-caption');
 
-    lightboxImg.src = fullGalleryImages[index].src;
-    lightboxImg.alt = fullGalleryImages[index].alt;
-    caption.textContent = fullGalleryImages[index].alt;
+    lightboxImg.src = currentEventImages[index].src;
+    lightboxImg.alt = currentEventImages[index].alt;
+    caption.textContent = currentEventImages[index].alt;
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
 }
@@ -203,27 +232,32 @@ function closeLightbox(event) {
     if (event && event.target.tagName === 'IMG') return;
     const lightbox = document.getElementById('lightbox');
     lightbox.classList.remove('open');
-    document.body.style.overflow = '';
+    // Restore overflow only if gallery overlay is still open
+    if (galleryOverlay && galleryOverlay.classList.contains('open')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
 }
 
 function changeLightbox(direction) {
     currentLightboxIndex += direction;
-    if (currentLightboxIndex >= fullGalleryImages.length) currentLightboxIndex = 0;
-    if (currentLightboxIndex < 0) currentLightboxIndex = fullGalleryImages.length - 1;
+    if (currentLightboxIndex >= currentEventImages.length) currentLightboxIndex = 0;
+    if (currentLightboxIndex < 0) currentLightboxIndex = currentEventImages.length - 1;
 
     const lightboxImg = document.getElementById('lightbox-img');
     const caption = document.getElementById('lightbox-caption');
 
-    lightboxImg.src = fullGalleryImages[currentLightboxIndex].src;
-    lightboxImg.alt = fullGalleryImages[currentLightboxIndex].alt;
-    caption.textContent = fullGalleryImages[currentLightboxIndex].alt;
+    lightboxImg.src = currentEventImages[currentLightboxIndex].src;
+    lightboxImg.alt = currentEventImages[currentLightboxIndex].alt;
+    caption.textContent = currentEventImages[currentLightboxIndex].alt;
 }
 
 // Keyboard navigation for lightbox
 document.addEventListener('keydown', function(e) {
     const lightbox = document.getElementById('lightbox');
     if (!lightbox.classList.contains('open')) return;
-    
+
     if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft') changeLightbox(-1);
     if (e.key === 'ArrowRight') changeLightbox(1);

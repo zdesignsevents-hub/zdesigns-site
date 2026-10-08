@@ -110,47 +110,47 @@
 <section id="portfolio" class="section portfolio-section">
     <div class="container">
         <h2 class="section-heading center">Portfolio</h2>
-        <p class="section-subtitle center">A glimpse of our recent events</p>
-        <div class="portfolio-grid">
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-1.jpg" alt="Wedding ceremony floral design" loading="lazy">
-                <div class="portfolio-overlay"><span>Ceremony Design</span></div>
+        <p class="section-subtitle center">Explore our event projects — click any project to view the full gallery</p>
+        <div class="event-projects-grid">
+            <div class="event-project-card" data-event="mandy">
+                <div class="event-project-image">
+                    <img src="images/mandy-1.jpg" alt="Mandy &amp; AK's wedding" loading="lazy">
+                    <div class="event-project-overlay">
+                        <span class="event-project-count">10 Photos</span>
+                    </div>
+                </div>
+                <div class="event-project-info">
+                    <h3 class="event-project-name">Mandy &amp; AK's</h3>
+                    <p class="event-project-desc">Mandy &amp; AK's Orlando wedding was pure magic—from a vibrant baraat to a starlit reception with chandeliers, lush florals, and endless dance floor energy. Every detail honored tradition and love in the most breathtaking way. <em>— Maharani Weddings</em></p>
+                    <span class="event-project-cta">View Gallery &rarr;</span>
+                </div>
             </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-2.jpg" alt="Elegant reception decor" loading="lazy">
-                <div class="portfolio-overlay"><span>Reception Decor</span></div>
+            <div class="event-project-card" data-event="hyatt">
+                <div class="event-project-image">
+                    <img src="images/hyatt-1.jpg" alt="Hyatt Regency Grand Cypress event" loading="lazy">
+                    <div class="event-project-overlay">
+                        <span class="event-project-count">6 Photos</span>
+                    </div>
+                </div>
+                <div class="event-project-info">
+                    <h3 class="event-project-name">Hyatt Regency Grand Cypress</h3>
+                    <p class="event-project-desc">An elegant celebration at the Hyatt Regency Grand Cypress, featuring stunning floral installations, sophisticated tablescapes, and a breathtaking venue transformation.</p>
+                    <span class="event-project-cta">View Gallery &rarr;</span>
+                </div>
             </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-3.jpg" alt="Floral installation" loading="lazy">
-                <div class="portfolio-overlay"><span>Floral Installation</span></div>
+            <div class="event-project-card" data-event="hardrock">
+                <div class="event-project-image">
+                    <img src="images/hardrock-1.jpg" alt="Hard Rock Daytona Beach event" loading="lazy">
+                    <div class="event-project-overlay">
+                        <span class="event-project-count">8 Photos</span>
+                    </div>
+                </div>
+                <div class="event-project-info">
+                    <h3 class="event-project-name">Hard Rock Daytona Beach</h3>
+                    <p class="event-project-desc">A spectacular event at Hard Rock Daytona Beach, blending bold design with coastal elegance — dramatic florals, vibrant lighting, and unforgettable ambiance.</p>
+                    <span class="event-project-cta">View Gallery &rarr;</span>
+                </div>
             </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-4.jpg" alt="Tablescape design" loading="lazy">
-                <div class="portfolio-overlay"><span>Tablescape Design</span></div>
-            </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-5.jpg" alt="Mandap decor" loading="lazy">
-                <div class="portfolio-overlay"><span>Mandap Decor</span></div>
-            </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-6.jpg" alt="Sangeet stage design" loading="lazy">
-                <div class="portfolio-overlay"><span>Sangeet Stage</span></div>
-            </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-7.jpg" alt="Event styling" loading="lazy">
-                <div class="portfolio-overlay"><span>Event Styling</span></div>
-            </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-8.jpg" alt="Centerpiece design" loading="lazy">
-                <div class="portfolio-overlay"><span>Centerpieces</span></div>
-            </div>
-            <div class="portfolio-item" data-gallery-open>
-                <img src="images/wix-portfolio-9.jpg" alt="Venue transformation" loading="lazy">
-                <div class="portfolio-overlay"><span>Venue Transformation</span></div>
-            </div>
-        </div>
-        <div class="portfolio-cta">
-            <button class="btn btn-outline" id="viewFullGalleryBtn">View Full Portfolio</button>
         </div>
         <div class="portfolio-note">
             <p><em>Follow <a href="https://www.instagram.com/zdesignsevents" target="_blank">@zdesignsevents</a> on Instagram for our latest work.</em></p>
@@ -346,14 +346,14 @@
     </div>
 </footer>
 
-<!-- ===== GALLERY OVERLAY (Full Portfolio) ===== -->
+<!-- ===== GALLERY OVERLAY (per-event drill-down) ===== -->
 <div id="galleryOverlay" class="gallery-overlay" aria-hidden="true">
     <div class="gallery-overlay-header">
-        <h2 class="gallery-overlay-title">Full Portfolio Gallery</h2>
-        <button class="gallery-back-btn" id="galleryCloseBtn" aria-label="Back to site">&larr; Back to Site</button>
+        <h2 class="gallery-overlay-title" id="galleryOverlayTitle">Gallery</h2>
+        <button class="gallery-back-btn" id="galleryCloseBtn" aria-label="Back to portfolio">&larr; Back to Portfolio</button>
     </div>
     <div class="gallery-overlay-grid" id="galleryOverlayGrid">
-        <!-- populated by script.js -->
+        <!-- populated by script.js per event -->
     </div>
 </div>
 
